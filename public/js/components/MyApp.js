@@ -34,7 +34,7 @@ var MyApp = {
         this.setState(AppStore.getState());
     },
     doNewToken : function(ev) {
-//        ev.stopPropagation();
+        ev.stopPropagation();
         var settings = {
             caOwner : document.getElementById('username').value,
             password : document.getElementById('password').value,
@@ -57,19 +57,14 @@ var MyApp = {
         var ifUnrestricted = function(label) {
           return (self.state.unrestrictedToken ? 'ANY' : self.state[label]);
         };
-console.log(this.state);
         return cE("div", {className: "container-fluid"},
+                  cE(NewError, {
+                         error: self.state.error
+                     }),
                   cE(rB.Panel, {header: cE('h1', null,
                                            cE(AppStatus,
                                               {isClosed: this.state.isClosed}),
                                            " Accounts")},
-/*
-                     cE(rB.ModalTrigger, {
-                                 modal : cE(NewError, {
-                                                error: self.state.error
-                                            })
-                        }),
-*/
                      cE(rB.Panel, {header: "Token for " + this.state.url},
                         cE(rB.Grid, null,
                            cE(rB.Row, null,
