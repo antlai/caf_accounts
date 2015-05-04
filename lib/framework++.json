@@ -1,5 +1,8 @@
 {
     "name": "top",
+    "env" : {
+        "publicHostname" : "process.env.publicHostname||root-accounts.vcap.me"
+    },
     "components": [
         {
             "name": "log"
