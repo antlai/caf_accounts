@@ -1,0 +1,11 @@
+app:
+  image: registry.cafjs.com:5000/root-accounts
+  links: ["redis"]
+  ports:
+    - "3002:3000"
+  environment:
+    - DOCKER_APP_INTERNAL_PORT=3000
+    - PORT0=3002
+    - HOST=localhost
+redis:
+  image: redis:2.8

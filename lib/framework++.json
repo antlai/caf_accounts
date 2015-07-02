@@ -8,6 +8,23 @@
             "name": "log"
         },
         {
+            "name": "paas",
+            "module": "caf_platform#plug_paas",
+            "description": "PaaS config service",
+             "env": {
+                 "paas" : "marathon",
+                 "port" : "process.env.PORT0||3000",
+                 "internalPort" : "process.env.DOCKER_APP_INTERNAL_PORT||-1",
+                 "host" : "process.env.HOST||localhost",
+                 "home": "process.env.HOME||/tmp",
+                 "redis" : {
+                     "port" : "process.env.REDIS_PORT_6379_TCP_PORT||6379",
+                     "hostname" : "process.env.HOST||localhost",
+                     "password" : null
+                 }
+             }
+        },
+        {
             "name": "security",
             "module": "caf_security#plug",
             "description": "Authenticates requests\n Properties: <keysDir> Directory with key material, defaults to colocated with ca_methods.js (i.e., <app_root>/lib). \n <trustedPubKeyFile> Trusted public key to verify signed tokens. \n <privateKeyFile> Optional private key to sign tokens. \n <pubKeyFile> Optional public key for signing key. \n <appPublisher> Name of the app publisher.\n <appLocalName> Local name app given by the app publisher.\n <allowNobodyUser> Enable the user 'nobody' to bypass authentication",
@@ -16,7 +33,7 @@
                 "trustedPubKeyFile" : "rsa_pub.pem",
                 "privateKeyFile": "rsa_priv.pem",
                 "publicKeyFile" : "rsa_pub.pem",
-                "appPublisher" : "F1CD0B760DCEE7DE770249F4512A9D0A",
+                "appPublisher" : "root",
                 "appLocalName" : "accounts",
                 "allowNobodyUser" : true,
                 "accountsURL": "http://root-accounts.vcap.me:3001"

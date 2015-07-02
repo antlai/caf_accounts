@@ -9,6 +9,7 @@
         "caf_cli": "^0.2.0",
         "caf_transport": "^0.2.0",
         "caf_security" : "^0.2.0",
+        "caf_platform" : "^0.2.0",
         "react" : "^0.13.0",
         "react-bootstrap" : "^0.20.3",
         "flux": "^2.0.2",
@@ -29,6 +30,7 @@
         }
     },
     "scripts": {
+        "start" : "node ./index.js",
         "test": "node ./node_modules/.bin/nodeunit",
         "build-js" : "browserify  -d -g varify -g aliasify -r ./public/js/app.js:app -o public/js/build.js",
         "build-min-js" : "export NODE_ENV=production; browserify -g varify -g aliasify  -r ./public/js/app.js:app | uglifyjs > public/js/build.min.js",
