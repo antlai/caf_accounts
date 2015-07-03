@@ -3,10 +3,10 @@
 # AUTHOR:         Antonio Lain <antlai@cafjs.com>
 # DESCRIPTION:    Cloud Assistants accounts management
 # TO_BUILD:       docker build -rm -t registry.cafjs.com:5000/root-accounts .
-# TO_RUN:         docker run -p <app_port>:3000 -e DOCKER_APP_INTERNAL_PORT=3000 -e VCAP_APP_PORT=<app_port> -e VCAP_APP_HOST=<host_ip> -e REDIS_PORT_6379_TCP_PORT=<redis_port>  -e REDIS_PORT_6379_TCP_ADDR=<redis_address>  registry.cafjs.com:5000/root-accounts
+# TO_RUN:         docker run -p <app_port>:3000 -e DOCKER_APP_INTERNAL_PORT=3000 -e PORT0=<app_port> -e HOST=<host_ip> -e REDIS_PORT_6379_TCP_PORT=<redis_port>   registry.cafjs.com:5000/root-accounts
 #                    or use docker-compose up -d (for local testing)
 #                    or, if redis is already locally running:
-#                  docker run -p <app_port>:3000 -e DOCKER_APP_INTERNAL_PORT=3000 -e VCAP_APP_PORT=<app_port> -e VCAP_APP_HOST=<host_ip> --link redis_name:redis registry.cafjs.com:5000/root-accounts
+#                  docker run -p <app_port>:3000 -e DOCKER_APP_INTERNAL_PORT=3000 -e PORT0=<app_port>  --link redis_name:redis registry.cafjs.com:5000/root-accounts
 
 
 FROM node:0.10

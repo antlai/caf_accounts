@@ -1,7 +1,7 @@
 {
     "name": "caf_accounts",
     "description": "Cloud Assistants accounts management",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "author": "Antonio Lain <antlai@cafjs.com>",
     "dependencies": {
         "caf_core": "^0.2.0",
@@ -9,7 +9,6 @@
         "caf_cli": "^0.2.0",
         "caf_transport": "^0.2.0",
         "caf_security" : "^0.2.0",
-        "caf_platform" : "^0.2.0",
         "react" : "^0.13.0",
         "react-bootstrap" : "^0.20.3",
         "flux": "^2.0.2",

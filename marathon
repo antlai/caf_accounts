@@ -23,7 +23,7 @@
                     "value":"DOCKER_APP_INTERNAL_PORT=3000"
                 }
             ],
-            "forcePullImage":false
+            "forcePullImage":true
         }
     },
     "args": [],
