@@ -1,5 +1,5 @@
 app:
-  image: registry.cafjs.com:5000/root-accounts
+  image: registry.cafjs.com:32000/root-accounts
   links: ["redis"]
   ports:
     - "3002:3000"

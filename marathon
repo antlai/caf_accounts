@@ -3,7 +3,7 @@
     "container": {
         "type":"DOCKER",
         "docker": {
-            "image":"registry.cafjs.com:5000/root-accounts",
+            "image":"registry.cafjs.com:32000/root-accounts",
             "network":"BRIDGE",
             "portMappings":[
                 {
