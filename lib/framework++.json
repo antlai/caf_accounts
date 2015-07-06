@@ -1,7 +1,7 @@
 {
     "name": "top",
     "env" : {
-        "publicHostname" : "process.env.publicHostname||root-accounts.vcap.me"
+        "publicHostname" : "process.env.publicHostname||root-accounts.cafjs.com"
     },
     "components": [
         {
