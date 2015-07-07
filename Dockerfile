@@ -19,6 +19,6 @@ WORKDIR /usr/src/app
 
 COPY . /usr/src/app
 
-RUN  . /usr/src/app/http_proxy_build; npm install
+RUN  . /usr/src/app/http_proxy_build; rm -fr node_modules/*; npm install . ; npm run build
 
 CMD [ "npm", "start" ]

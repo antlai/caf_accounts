@@ -1,8 +1,9 @@
 app:
   image: registry.cafjs.com:32000/root-accounts
   links: ["redis"]
+  net: "bridge"
   ports:
-    - "3002:3000"
+    - "127.0.0.1:3002:3000"
   environment:
     - DOCKER_APP_INTERNAL_PORT=3000
     - PORT0=3002
