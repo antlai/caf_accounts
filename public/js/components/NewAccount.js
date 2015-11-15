@@ -4,48 +4,81 @@ var cE = React.createElement;
 var AppActions = require('../actions/AppActions');
 
 var NewAccount = {
-    doSignUp: function(ev) {
-        var settings = {
-            caOwner : document.getElementById('usernameNew').value,
-            passwordNew1 : document.getElementById('passwordNew1').value,
-            passwordNew2 : document.getElementById('passwordNew2').value
-        };
-        document.getElementById('passwordNew1').value = '';
-        document.getElementById('passwordNew2').value = '';
-        AppActions.newAccount(settings);
-        this.props.onRequestHide();
+
+    getInitialState: function() {
+        return {};
     },
 
-    passwordChange: function(ev) {
+    doSignUp: function(ev) {
+        var settings = {
+            caOwner :  this.props.caOwner,
+            passwordNew1 : this.state.password1,
+            passwordNew2 : this.state.password2
+        };
+        AppActions.newAccount(settings);
+        this.setState({
+            password1: '',
+            password2: ''
+        });
+//        this.doDismiss();
+    },
+
+    handlePasswordChange1 : function() {
+        this.setState({
+            password1: this.refs.password1.getValue()
+        });
+    },
+
+    handlePasswordChange2 : function() {
+        this.setState({
+            password2: this.refs.password2.getValue()
+        });
+    },
+
+    passwordKeyDown: function(ev) {
         if (ev.key === 'Enter') {
+            this.handlePasswordChange2();
             this.doSignUp(ev);
         }
     },
+
+    doDismiss: function(ev) {
+       AppActions.setLocalState({
+            newAccount: false
+        });
+    },
+
     render: function() {
-        return cE(rB.Modal, React.__spread({},  this.props, {
-                                               bsStyle: "primary",
-                                               title: "Create Account",
-                                               animation: false}),
-                  cE("div", {className: "modal-body"},
-                     cE('p', null, 'Username',
-                        cE(rB.Input, {
-                               type: 'text',
-                               id: 'usernameNew',
-                               defaultValue: this.props.username
-                           })
-                       ),
-                     cE('p', null, 'Password',
-                        cE(rB.Input, {type: 'password',
-                                      id: 'passwordNew1',
-                                      onKeyDown: this.passwordChange})
-                       ),
-                     cE('p', null, 'Repeat Password',
-                        cE(rB.Input, {type: 'password',
-                                      id: 'passwordNew2',
-                                      onKeyDown: this.passwordChange})
-                       )
+        return cE(rB.Modal,{show: this.props.newAccount,
+                            onHide: this.doDismiss,
+                            animation: false},
+                  cE(rB.Modal.Header, {
+                      className : "bg-primary text-primary",
+                      closeButton: true},
+                     cE(rB.Modal.Title, null, "Create Account")
                     ),
-                  cE("div", {className: "modal-footer"},
+                  cE(rB.ModalBody, null,
+                     cE(rB.Input, {
+                         type: 'text',
+                         label: 'Username',
+                         id: 'usernameNew',
+                         readOnly: 'true',
+                         value: this.props.caOwner
+                     }),
+                     cE(rB.Input, {type: 'password',
+                                   ref: 'password1',
+                                   label: 'Password',
+                                   onChange: this.handlePasswordChange1,
+                                   value : this.state.password1
+                                  }),
+                     cE(rB.Input, {type: 'password',
+                                   ref: 'password2',
+                                   label: 'Repeat Password',
+                                   onChange: this.handlePasswordChange2,
+                                   value : this.state.password2,
+                                   onKeyDown: this.passwordKeyDown})
+                    ),
+                  cE(rB.Modal.Footer, null,
                      cE(rB.Button, {onClick: this.doSignUp}, "Sign up")
                     )
                  );

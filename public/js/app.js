@@ -1,6 +1,5 @@
-
-
 var React = require('react');
+var ReactDOM = require('react-dom');
 var AppSession = require('./session/AppSession');
 var MyApp = require('./components/MyApp');
 var AppActions = require('./actions/AppActions');
@@ -15,11 +14,11 @@ var options = {};
 
 AppSession.onopen = function() {
     console.log('open session');
-    React.render(
+    AppActions.init(options);
+    ReactDOM.render(
         cE(MyApp, null),
         document.getElementById('content')
     );
-    AppActions.init(options);
 };
 
 var mixin = function(dest, source) {

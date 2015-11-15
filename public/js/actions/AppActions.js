@@ -93,14 +93,16 @@ var AppActions = {
                                           errorF(err);
                                       } else {
                                           console.log('ok');
-                                          updateF({caOwner: settings.caOwner,
-                                                   accountCreated: true});
+                                          updateF({newAccount: false});
                                       }
                                   });
         }
     },
     resetError: function() {
         errorF(null);
+    },
+    setLocalState: function(data) {
+        updateF(data);
     }
 };
 
