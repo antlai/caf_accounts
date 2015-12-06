@@ -1,7 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
 var AppSession = require('../session/AppSession');
-var json_rpc = require('caf_transport').json_rpc;
 var cli = require('caf_cli');
 var url = require('url');
 var querystring = require('querystring');
