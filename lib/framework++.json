@@ -3,7 +3,11 @@
     "env" : {
         "appPublisher" :"process.env.APP_PUBLISHER||root",
         "appLocalName" : "process.env.APP_LOCAL_NAME||accounts",
-        "appSuffix" : "process.env.APP_SUFFIX||cafjs.com"
+        "appSuffix" : "process.env.APP_SUFFIX||cafjs.com",
+	"keysDir": "process.env.KEYS_DIR||null",
+	"trustedPubKeyFile" : "process.env.TRUSTED_PUB_KEY_FILE||rsa_pub.pem.dummy",
+	"publicKeyFile" : "process.env.PUBLIC_KEY_FILE||rsa_pub.pem.dummy",
+	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy"
     },
     "components": [
         {
@@ -14,10 +18,10 @@
             "module": "caf_security#plug",
             "description": "Authenticates requests\n Properties: <keysDir> Directory with key material, defaults to colocated with ca_methods.js (i.e., <app_root>/lib). \n <trustedPubKeyFile> Trusted public key to verify signed tokens. \n <privateKeyFile> Optional private key to sign tokens. \n <pubKeyFile> Optional public key for signing key. \n <appPublisher> Name of the app publisher.\n <appLocalName> Local name app given by the app publisher.\n <allowNobodyUser> Enable the user 'nobody' to bypass authentication",
             "env" : {
-                "keysDir": "process.env.KEYS_DIR||null",
-                "trustedPubKeyFile" : "rsa_pub.pem",
-                "privateKeyFile": "rsa_priv.pem",
-                "publicKeyFile" : "rsa_pub.pem",
+                "keysDir": "$._.env.keysDir",
+                "trustedPubKeyFile" : "$._.env.trustedPubKeyFile",
+                "privateKeyFile": "$._.env.privateKeyFile",
+                "publicKeyFile" :  "$._.env.publicKeyFile",
                 "allowNobodyUser" : true,
                 "accountsURL": null
             }

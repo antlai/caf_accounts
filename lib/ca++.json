@@ -1,5 +1,10 @@
 {
     "name" : "ca",
+    "env" : {
+	"keysDir": "process.env.KEYS_DIR||null",
+	"publicKeyFile" : "process.env.PUBLIC_KEY_FILE||rsa_pub.pem.dummy",
+	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy"
+    },
     "components" : [
         {
             "name": "handler",
@@ -7,6 +12,9 @@
                 {
                     "name": "props",
                     "env" : {
+			"keysDir": "$._.env.keysDir",
+			"privateKeyFile": "$._.env.privateKeyFile",
+			"publicKeyFile" :  "$._.env.publicKeyFile",
                         "stateVersion" : "$._.env.stateVersion",
                         "testAccounts" : [
                             {
