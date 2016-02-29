@@ -1,7 +1,7 @@
 {
     "name": "caf_accounts",
     "description": "Cloud Assistants accounts management",
-    "version": "0.2.13",
+    "version": "0.2.14",
     "author": "Antonio Lain <antlai@cafjs.com>",
     "dependencies": {
         "caf_core": "^0.2.0",
@@ -18,9 +18,9 @@
     "devDependencies": {
         "nodeunit" : ">=0.9",
         "jwt-decode" : "^1.1.0",
-        "aliasify": "^1.7.2",
+        "aliasify": "^1.9.0",
         "varify": "^0.1.1",
-        "browserify": "^9.0.3",
+        "browserify": "^13.0.0",
         "uglify-js" : "^2.4.0",
         "srp-shim" :"^0.2.0"
     },
