@@ -2,6 +2,13 @@
     "id": "root-accounts",
     "container": {
         "type":"DOCKER",
+         "volumes":[
+            {
+                "containerPath":"/keys",
+                "hostPath":"/nfs/privatekeys",
+                "mode":"RO"
+            }
+        ],
         "docker": {
             "image":"registry.cafjs.com:32000/root-accounts",
             "network":"BRIDGE",
@@ -14,6 +21,22 @@
             ],
             "privileged":false,
             "parameters":[
+                {
+                    "key":"env",
+                    "value":"KEYS_DIR=/keys"
+                },
+                {
+                    "key":"env",
+                    "value":"TRUSTED_PUB_KEY_FILE=rsa_pub.pem"
+                },
+                {
+                    "key":"env",
+                    "value":"PUBLIC_KEY_FILE=rsa_pub.pem"
+                },
+                {
+                    "key":"env",
+                    "value":"PRIVATE_KEY_FILE=rsa_priv.pem"
+                },
                 {
                     "key":"env",
                     "value":"REDIS_PORT_6379_TCP_PORT=6380"
