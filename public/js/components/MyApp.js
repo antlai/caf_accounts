@@ -73,7 +73,7 @@ var MyApp = {
                                               {isClosed: this.state.isClosed}),
                                            " Accounts")},
                      cE(rB.Panel, {header: "Token for " + this.state.url},
-                        cE(rB.Grid, null,
+                        cE(rB.Grid, {fluid: true},
                            cE(rB.Row, null,
                               cE(rB.Col, {xs: 10, sm:5},
                                  cE(rB.Input, {
