@@ -1,13 +1,13 @@
 {
     "name": "caf_accounts",
     "description": "Cloud Assistants accounts management",
-    "version": "0.2.15",
+    "version": "0.3.0",
     "author": "Antonio Lain <antlai@cafjs.com>",
     "dependencies": {
-        "caf_core": "^0.2.0",
-        "caf_srp" : "^0.2.0",
-        "caf_cli": "^0.2.0",
-        "caf_transport": "^0.2.0",
+        "caf_core": "^0.3.0",
+        "caf_srp" : "^0.3.0",
+        "caf_cli": "^0.3.0",
+        "caf_transport": "^0.3.0",
         "react" : "^0.14.0",
         "react-dom" : "^0.14.0",
         "react-bootstrap" : "^0.28.1",
@@ -19,10 +19,9 @@
         "nodeunit" : ">=0.9",
         "jwt-decode" : "^1.1.0",
         "aliasify": "^1.9.0",
-        "varify": "^0.1.1",
         "browserify": "^13.0.0",
-        "uglify-js" : "^2.4.0",
-        "srp-shim" :"^0.2.0"
+        "uglify-es": "^3.3.8",
+        "srp-shim" :"^0.3.0"
     },
     "aliasify": {
         "aliases" : {
@@ -32,10 +31,10 @@
     "scripts": {
         "start" : "node ./index.js",
         "test": "node ./node_modules/.bin/nodeunit",
-        "build-js" : "browserify  -d -g varify -g aliasify -r ./public/js/app.js:app -o public/js/build.js",
-        "build-min-js" : "export NODE_ENV=production; browserify -g varify -g aliasify  -r ./public/js/app.js:app | uglifyjs > public/js/build.min.js",
-        "build": "npm run build-js && npm run build-min-js"
+        "build-js" : "browserify  -d -g aliasify -r ./public/js/app.js:app -o public/js/build.js",
+        "build-min-js" : "export NODE_ENV=production; browserify -g aliasify  -r ./public/js/app.js:app | uglifyjs > public/js/build.min.js",
+        "build": "yarn run build-js && yarn run build-min-js"
     },
    "main": "index",
-  "engines": { "node": ">= 0.10.29" }
+  "engines": { "node": ">= 8.0.0" }
 }
