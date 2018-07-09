@@ -2,8 +2,8 @@
 # DOCKER-VERSION  1.7.0
 # AUTHOR:         Antonio Lain <antlai@cafjs.com>
 # DESCRIPTION:    Cloud Assistants accounts management
-# TO_BUILD:       cafjs mkImage . registry.cafjs.com:32000/root-accounts .
-# TO_RUN:         cafjs run --appImage registry.cafjs.com:32000/root-accounts accounts
+# TO_BUILD:       cafjs mkImage . gcr.io/cafjs-k8/root-accounts .
+# TO_RUN:         cafjs run --appImage gcr.io/cafjs-k8/root-accounts accounts
 
 
 FROM node:8
