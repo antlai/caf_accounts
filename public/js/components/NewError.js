@@ -3,13 +3,18 @@ var rB = require('react-bootstrap');
 var cE = React.createElement;
 var AppActions = require('../actions/AppActions');
 
-var NewError = {
-    doDismissError: function(ev) {
-        AppActions.resetError();
-    },
+class  NewError extends React.Component {
+    constructor(props) {
+        super(props);
+         this.doDismissError = this.doDismissError.bind(this);
+    }
 
-    render: function() {
-        return cE(rB.Modal,{show: this.props.error,
+    doDismissError(ev) {
+        AppActions.resetError(this.props.ctx);
+    }
+
+    render() {
+        return cE(rB.Modal,{show: !!this.props.error,
                             onHide: this.doDismissError,
                             animation: false},
                   cE(rB.Modal.Header, {
@@ -18,10 +23,9 @@ var NewError = {
                      cE(rB.Modal.Title, null, "Error")
                     ),
                   cE(rB.ModalBody, null,
-                     cE('p', null, 'Message:',
-                        cE(rB.Alert, {bsStyle: 'danger'},
-                           this.props.error && this.props.error.message)
-                       )
+                     cE('p', null, 'Message:'),
+                     cE(rB.Alert, {bsStyle: 'danger'},
+                        this.props.error && this.props.error.message)
                     ),
                   cE(rB.Modal.Footer, null,
                      cE(rB.Button, {onClick: this.doDismissError}, "Continue")
@@ -30,4 +34,4 @@ var NewError = {
     }
 };
 
-module.exports = React.createClass(NewError);
+module.exports = NewError;

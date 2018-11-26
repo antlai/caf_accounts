@@ -1,35 +1,45 @@
-var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppConstants = require('../constants/AppConstants');
-var AppSession = require('../session/AppSession');
 var cli = require('caf_cli');
 var url = require('url');
 var querystring = require('querystring');
 var srpClient = require('caf_srp').client;
+var json_rpc = require('caf_transport').json_rpc;
 
-var updateF = function(state) {
+var updateF = function(store, state) {
     var d = {
-        actionType: AppConstants.APP_UPDATE,
+        type: AppConstants.APP_UPDATE,
         state: state
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
 
-
-var errorF =  function(err) {
+var errorF =  function(store, err) {
     var d = {
-        actionType: AppConstants.APP_ERROR,
+        type: AppConstants.APP_ERROR,
         error: err
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
 
-var wsStatusF =  function(isClosed) {
+var notifyF = function(store, message) {
+    var getNotifData = function(msg) {
+        return json_rpc.getMethodArgs(msg)[0];
+    };
     var d = {
-        actionType: AppConstants.WS_STATUS,
+        type: AppConstants.APP_NOTIFICATION,
+        state: getNotifData(message)
+    };
+    store.dispatch(d);
+};
+
+var wsStatusF =  function(store, isClosed) {
+    var d = {
+        type: AppConstants.WS_STATUS,
         isClosed: isClosed
     };
-    AppDispatcher.dispatch(d);
+    store.dispatch(d);
 };
+
 
 var stripURL = function(x) {
     var accountsURL = url.parse(window.location.href);
@@ -43,6 +53,8 @@ var redirect = function(token) {
     var options = querystring.parse(parsedURL.hash.slice(1));
     var parsedGoTo = url.parse(options.goTo);
     delete options.goTo;
+    delete options.unrestrictedToken;
+    delete options.newAccount;
     options.token = token;
     parsedGoTo.hash = '#' +  querystring.stringify(options);
     parsedGoTo.protocol = (parsedGoTo.protocol === 'ws:' ?
@@ -53,10 +65,10 @@ var redirect = function(token) {
 };
 
 var AppActions = {
-    init: function(state) {
-        updateF(state);
+    init(ctx, state) {
+        updateF(ctx.store, state);
     },
-    newToken: function(settings) {
+    newToken(ctx, settings) {
         var spec = {
             log: function(x) { console.log(x);},
             securityClient: srpClient,
@@ -70,45 +82,46 @@ var AppActions = {
         };
         var tf = cli.TokenFactory(spec);
         tf.newToken(null, function(err, data) {
-                        if (err) {
-                            errorF(err);
-                        } else {
-                            console.log('got token ' + data.slice(0,10));
-                            redirect(data);
-                        }
-                    });
+            if (err) {
+                errorF(ctx.store, err);
+            } else {
+                console.log('got token ' + data.slice(0,10));
+                redirect(data);
+            }
+        });
     },
-    newAccount: function(settings) {
+    async newAccount(ctx, settings) {
         if (!settings.passwordNew1 ||
             (settings.passwordNew1 !== settings.passwordNew2)) {
             var err = new Error('Passwords do not match, retry');
-            errorF(err);
+            errorF(ctx.store, err);
         } else {
-            var account = srpClient
-                .clientInstance(settings.caOwner, settings.passwordNew1)
-                .newAccount();
-            AppSession.newAccount(account, function(err, data) {
-                                      if (err) {
-                                          errorF(err);
-                                      } else {
-                                          console.log('ok');
-                                          updateF({newAccount: false});
-                                      }
-                                  });
+            try {
+                var account = srpClient
+                        .clientInstance(settings.caOwner, settings.passwordNew1)
+                        .newAccount();
+                await ctx.session.newAccount(account).getPromise();
+                console.log('ok');
+                updateF(ctx.store, {newAccount: false});
+            } catch (err) {
+                errorF(ctx.store, err);
+            };
         }
     },
-    resetError: function() {
-        errorF(null);
+    message(ctx, msg) {
+        console.log('message:' + JSON.stringify(msg));
+        notifyF(ctx.store, msg);
     },
-    setLocalState: function(data) {
-        updateF(data);
+    closing(ctx, err) {
+        console.log('Closing:' + JSON.stringify(err));
+        wsStatusF(ctx.store, true);
+    },
+    resetError(ctx) {
+        errorF(ctx.store, null);
+    },
+    setLocalState(ctx, data) {
+        updateF(ctx.store, data);
     }
 };
-
-AppSession.onclose = function(err) {
-    console.log('Closing:' + JSON.stringify(err));
-    wsStatusF(true);
-};
-
 
 module.exports = AppActions;

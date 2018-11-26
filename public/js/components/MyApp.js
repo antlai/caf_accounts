@@ -1,120 +1,108 @@
 var React = require('react');
 var rB = require('react-bootstrap');
-var AppStore = require('../stores/AppStore');
 var AppActions = require('../actions/AppActions');
 var AppStatus = require('./AppStatus');
 var NewAccount = require('./NewAccount');
 var NewError = require('./NewError');
 var TableToken = require('./TableToken');
-
+var TokenCreate = require('./TokenCreate');
 var cE = React.createElement;
 
+class MyApp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = this.props.ctx.store.getState();
+    }
 
-var MyApp = {
-    getInitialState: function() {
-        return AppStore.getState();
-    },
-    componentDidMount: function() {
-        AppStore.addChangeListener(this._onChange);
-        this.refs.password.getInputDOMNode().focus();
-    },
-    componentWillUnmount: function() {
-        AppStore.removeChangeListener(this._onChange);
-    },
-    _onChange : function(ev) {
-        this.setState(AppStore.getState());
-    },
-    clearPassword : function() {
-        AppActions.setLocalState({
-            password: ''
-        });
-    },
-    doNewToken : function(ev) {
-        var settings = {
-            caOwner : this.state.caOwner,
-            password : this.state.password,
-            durationInSec: this.state.durationInSec,
-            appLocalName : this.state.appLocalName,
-            appPublisher : this.state.appPublisher,
-            caLocalName :  this.state.caLocalName,
-            unrestrictedToken: this.state.unrestrictedToken
-        };
-        AppActions.newToken(settings);
-        this.clearPassword();
-    },
-    doSignUp:  function(ev) {
-        AppActions.setLocalState({
-            newAccount: true
-        });
-    },
-    handlePasswordChange : function() {
-        AppActions.setLocalState({
-            password: this.refs.password.getValue()
-        });
-    },
-
-    submit: function(ev) {
-        if (ev.key === 'Enter') {
-            this.handlePasswordChange();
-            this.doNewToken(ev);
+    componentDidMount() {
+        if (!this.unsubscribe) {
+            this.unsubscribe = this.props.ctx.store
+                .subscribe(this._onChange.bind(this));
+            this._onChange();
         }
-    },
-    render: function() {
+    }
+
+    componentWillUnmount() {
+        if (this.unsubscribe) {
+            this.unsubscribe();
+            this.unsubscribe = null;
+        }
+    }
+
+    _onChange() {
+        if (this.unsubscribe) {
+            this.setState(this.props.ctx.store.getState());
+        }
+    }
+
+    render() {
         return cE("div", {className: "container-fluid"},
                   cE(NewError, {
+                      ctx: this.props.ctx,
                       error: this.state.error
                   }),
                   cE(NewAccount, {
+                      ctx: this.props.ctx,
                       newAccount: this.state.newAccount,
                       caOwner: this.state.caOwner
                   }),
-                  cE(rB.Panel, {header: cE('h1', null,
-                                           cE(AppStatus,
-                                              {isClosed: this.state.isClosed}),
-                                           " Accounts")},
-                     cE(rB.Panel, {header: "Token for " + this.state.url},
-                        cE(rB.Grid, {fluid: true},
-                           cE(rB.Row, null,
-                              cE(rB.Col, {xs: 10, sm:5},
-                                 cE(rB.Input, {
-                                     type: 'text',
-                                     ref: 'username',
-                                     label: 'Username',
-                                     readOnly: 'true',
-                                     value: this.state.caOwner
-                                 })
-                                ),
-                              cE(rB.Col, {xs: 10, sm:5},
-                                 cE(rB.Input, {
-                                     type: 'password',
-                                     label: 'Password',
-                                     ref: 'password',
-                                     value: this.state.password,
-                                     onChange: this.handlePasswordChange,
-                                     onKeyDown: this.submit
-                                 })
-                                )
-                             ),
-                           cE(rB.Row, null,
-                              cE(rB.Col, {xs:5, sm:2},
-                                 cE(rB.Button, {onClick: this.doNewToken,
-                                                bsStyle: 'primary'},
-                                    'Create Token')
-                                ),
-                              cE(rB.Col, {xs:5, sm:2},
-                                 cE(rB.Button, {onClick: this.doSignUp,
-                                                bsStyle: 'primary'},
-                                    'Sign up')
+                  cE(rB.Panel, null,
+                    cE(rB.Panel.Heading, null,
+                        cE(rB.Panel.Title, null,
+                           cE(rB.Grid, {fluid: true},
+                              cE(rB.Row, null,
+                                 cE(rB.Col, {sm:1, xs:1},
+                                    cE(AppStatus, {
+                                        isClosed: this.state.isClosed
+                                    })
+                                   ),
+                                 cE(rB.Col, {
+                                     sm: 5,
+                                     xs:10,
+                                     className: 'text-right'
+                                 }, "Accounts"),
+                                 cE(rB.Col, {
+                                     sm: 5,
+                                     xs:11,
+                                     className: 'text-right text-danger'
+                                 }, "Verify Address Bar!")
                                 )
                              )
                           )
                        ),
-                     cE(rB.Panel, {header: "Details"},
-                        cE(TableToken, {token :this.state})
+                     cE(rB.Panel.Body, null,
+                        cE(rB.Panel, null,
+                           cE(rB.Panel.Heading, null,
+                              cE(rB.Panel.Title, null, "Token for " +
+                                 this.state.url)
+                             ),
+                           cE(rB.Panel.Body, null,
+                              cE(TokenCreate, {
+                                  ctx: this.props.ctx,
+                                  caOwner: this.state.caOwner,
+                                  password: this.state.password,
+                                  durationInSec: this.state.durationInSec,
+                                  appLocalName: this.state.appLocalName,
+                                  appPublisher: this.state.appPublisher,
+                                  caLocalName: this.state.caLocalName,
+                                  unrestrictedToken:
+                                  this.state.unrestrictedToken
+                              })
+                             )
+                          ),
+                        cE(rB.Panel, null,
+                           cE(rB.Panel.Heading, null,
+                              cE(rB.Panel.Title, null, "The CA owner is " +
+                                 this.state.caOwner)
+                             ),
+                           cE(rB.Panel.Body, null,
+                              cE(TableToken, {token: this.state})
+                             )
+                          )
                        )
                     )
                  );
     }
 };
 
-module.exports = React.createClass(MyApp);
+module.exports = MyApp;

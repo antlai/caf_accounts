@@ -1,5 +1,6 @@
 var cli = require('caf_cli');
 var urlParser = require('url');
+var AppActions = require('../actions/AppActions');
 
 var stripURL = function()  {
     var url = urlParser.parse(window.location.href);
@@ -7,6 +8,32 @@ var stripURL = function()  {
     return urlParser.format(url);
 };
 
-module.exports = new cli.Session(stripURL(), 'NOBODY-UNKNOWN', {
-                                     disableBackchannel: true
-                                 });
+exports.connect = function(ctx, options) {
+    return new Promise((resolve, reject) => {
+        var session = new cli.Session(stripURL(), 'NOBODY-UNKNOWN', {
+            disableBackchannel: true
+        });
+
+        session.onopen = async function() {
+            console.log('open session');
+            try {
+                resolve(await AppActions.init(ctx, options));
+            } catch (err) {
+                reject(err);
+            }
+        };
+
+        session.onmessage = function(msg) {
+            console.log('message:' + JSON.stringify(msg));
+            AppActions.message(ctx, msg);
+        };
+
+        session.onclose = function(err) {
+            console.log('Closing:' + JSON.stringify(err));
+            AppActions.closing(ctx, err);
+            err && reject(err); // no-op if session already opened
+        };
+
+        ctx.session = session;
+    });
+};
