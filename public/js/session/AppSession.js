@@ -10,8 +10,10 @@ var stripURL = function()  {
 
 exports.connect = function(ctx, options) {
     return new Promise((resolve, reject) => {
-        var session = new cli.Session(stripURL(), 'NOBODY-UNKNOWN', {
-            disableBackchannel: true
+        var nobodyCA = 'NOBODY-' + options.caOwner.substring(0, 2);
+        var session = new cli.Session(stripURL(), nobodyCA, {
+            disableBackchannel: true,
+            from: nobodyCA
         });
 
         session.onopen = async function() {

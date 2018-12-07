@@ -65,8 +65,13 @@ var redirect = function(token) {
 };
 
 var AppActions = {
-    init(ctx, state) {
-        updateF(ctx.store, state);
+    async init(ctx, state) {
+        try {
+            var key = await ctx.session.getSiteKey().getPromise();
+            updateF(ctx.store, Object.assign({}, state, {siteKey: key}));
+        } catch (err) {
+            errorF(ctx.store, err);
+        }
     },
     newToken(ctx, settings) {
         var spec = {
@@ -93,14 +98,18 @@ var AppActions = {
     async newAccount(ctx, settings) {
         if (!settings.passwordNew1 ||
             (settings.passwordNew1 !== settings.passwordNew2)) {
-            var err = new Error('Passwords do not match, retry');
+            var err = new Error('Passwords do not match, please retry');
+            errorF(ctx.store, err);
+        } else if (!settings.reCaptcha) {
+            err = new Error('Missing captcha, please retry');
             errorF(ctx.store, err);
         } else {
             try {
                 var account = srpClient
                         .clientInstance(settings.caOwner, settings.passwordNew1)
                         .newAccount();
-                await ctx.session.newAccount(account).getPromise();
+                await ctx.session.newAccount(account, settings.reCaptcha)
+                    .getPromise();
                 console.log('ok');
                 updateF(ctx.store, {newAccount: false});
             } catch (err) {

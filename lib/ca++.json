@@ -7,6 +7,27 @@
     },
     "components" : [
         {
+            "name": "security"
+        },
+        {
+            "module": "caf_recaptcha#plug_ca",
+            "name": "recaptcha",
+            "description": "Manages a recaptcha validation service for a CA",
+            "env" : {
+                "maxRetries" : "$._.env.maxRetries",
+                "retryDelay" : "$._.env.retryDelay"
+            },
+            "components" : [
+                {
+                    "module": "caf_recaptcha#proxy",
+                    "name": "proxy",
+                    "description": "Allows access to a recaptcha service",
+                    "env" : {
+                    }
+                }
+            ]
+        },
+        {
             "name": "handler",
             "components" : [
                 {

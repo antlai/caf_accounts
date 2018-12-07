@@ -44,7 +44,8 @@ class MyApp extends React.Component {
                   cE(NewAccount, {
                       ctx: this.props.ctx,
                       newAccount: this.state.newAccount,
-                      caOwner: this.state.caOwner
+                      caOwner: this.state.caOwner,
+                      siteKey: this.state.siteKey
                   }),
                   cE(rB.Panel, null,
                     cE(rB.Panel.Heading, null,

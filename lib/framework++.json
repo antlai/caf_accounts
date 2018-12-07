@@ -5,9 +5,12 @@
         "appLocalName" : "process.env.APP_LOCAL_NAME||accounts",
         "appSuffix" : "process.env.APP_SUFFIX||cafjs.com",
 	"keysDir": "process.env.KEYS_DIR||null",
+        "reCaptchaKeysDir": "process.env.RECAPTCHA_KEYS_DIR||null",
 	"trustedPubKeyFile" : "process.env.TRUSTED_PUB_KEY_FILE||rsa_pub.pem.dummy",
 	"publicKeyFile" : "process.env.PUBLIC_KEY_FILE||rsa_pub.pem.dummy",
-	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy"
+	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy",
+	"reCaptchaPublicKeyFile" : "process.env.RECAPTCHA_PUBLIC_KEY_FILE||reCaptcha_pub.dummy",
+	"reCaptchaPrivateKeyFile" : "process.env.RECAPTCHA_PRIVATE_KEY_FILE||reCaptcha_priv.dummy"
     },
     "components": [
         {
@@ -24,6 +27,16 @@
                 "publicKeyFile" :  "$._.env.publicKeyFile",
                 "allowNobodyUser" : true,
                 "accountsURL": null
+            }
+        },
+        {
+            "name": "recaptcha",
+            "module": "caf_recaptcha#plug",
+            "description": "ReCaptcha validation service.",
+            "env" : {
+                "keysDir" : "$._.env.reCaptchaKeysDir",
+                "privateKeyFile" : "$._.env.reCaptchaPrivateKeyFile",
+                "publicKeyFile" : "$._.env.reCaptchaPublicKeyFile"
             }
         },
         {

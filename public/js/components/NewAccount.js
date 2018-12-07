@@ -2,24 +2,28 @@ var React = require('react');
 var rB = require('react-bootstrap');
 var cE = React.createElement;
 var AppActions = require('../actions/AppActions');
+var reCap = require('react-google-recaptcha');
+var ReCAPTCHA = reCap.default;
 
 class  NewAccount extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {password1: '', password2: ''};
+        this.state = {password1: '', password2: '', reCaptcha: null};
         this.doDismiss = this.doDismiss.bind(this);
         this.handlePasswordChange1 = this.handlePasswordChange1.bind(this);
         this.handlePasswordChange2 = this.handlePasswordChange2.bind(this);
         this.passwordKeyDown = this.passwordKeyDown.bind(this);
         this.doSignUp = this.doSignUp.bind(this);
+        this.handleReCaptcha = this.handleReCaptcha.bind(this);
     }
 
     doSignUp(ev) {
         var settings = {
             caOwner:  this.props.caOwner,
             passwordNew1: this.state.password1,
-            passwordNew2: this.state.password2
+            passwordNew2: this.state.password2,
+            reCaptcha: this.state.reCaptcha
         };
         AppActions.newAccount(this.props.ctx, settings);
 
@@ -36,6 +40,12 @@ class  NewAccount extends React.Component {
         });
     }
 
+    handleReCaptcha(value) {
+        console.log('Captcha value:' + value);
+        this.setState({
+            reCaptcha: value
+        });
+    }
     handlePasswordChange1(ev) {
         this.setState({
             password1: ev.target.value
@@ -94,7 +104,11 @@ class  NewAccount extends React.Component {
                             value: this.state.password2,
                             onKeyPress: this.passwordKeyDown
                         })
-                       )
+                       ),
+                     cE(ReCAPTCHA, {
+                         sitekey: this.props.siteKey,
+                         onChange: this.handleReCaptcha
+                     })
                     ),
                   cE(rB.Modal.Footer, null,
                      cE(rB.Button, {onClick: this.doDismiss}, "Cancel"),

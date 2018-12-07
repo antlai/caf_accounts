@@ -2,7 +2,7 @@ var AppConstants = require('../constants/AppConstants');
 
 var AppReducer = function(state, action) {
     if (typeof state === 'undefined') {
-        return  {isClosed: false, password: ''};
+        return  {siteKey: null, isClosed: false, password: ''};
     } else {
         switch(action.type) {
         case AppConstants.APP_UPDATE:

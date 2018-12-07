@@ -37,9 +37,9 @@ var initOptions = function() {
 
 exports.main = async function() {
     var ctx =  {
-        store: redux.createStore(AppReducer/*,
+        store: redux.createStore(AppReducer,
                                  window.__REDUX_DEVTOOLS_EXTENSION__ &&
-                                 window.__REDUX_DEVTOOLS_EXTENSION__()*/)
+                                 window.__REDUX_DEVTOOLS_EXTENSION__())
     };
     try {
         await AppSession.connect(ctx, initOptions());

@@ -8,10 +8,12 @@
         "caf_srp" : "^0.3.0",
         "caf_cli": "^0.3.0",
         "caf_transport": "^0.3.0",
+        "caf_recaptcha": "^0.3.0",
         "react" : "^16.6.0",
         "react-dom" : "^16.6.0",
         "react-bootstrap" : "^0.32.4",
         "redux": "^3.7.2",
+        "react-google-recaptcha": "^1.0.5",
         "keymirror": "^0.1.0"
     },
     "devDependencies": {
