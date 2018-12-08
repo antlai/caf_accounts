@@ -89,12 +89,12 @@ class TokenCreate extends React.Component {
                         cE(rB.Button, {onClick: this.doNewToken,
                                        bsStyle: 'primary'},
                            'Create Token')
-                       ),
+                       )/*,
                      cE(rB.Col, {xs:5, sm:2},
                         cE(rB.Button, {onClick: this.doSignUp,
                                        bsStyle: 'primary'},
                            'Sign up')
-                       )
+                       )*/
                     )
                  );
     }
