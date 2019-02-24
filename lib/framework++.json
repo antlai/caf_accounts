@@ -10,7 +10,8 @@
 	"publicKeyFile" : "process.env.PUBLIC_KEY_FILE||rsa_pub.pem.dummy",
 	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy",
 	"reCaptchaPublicKeyFile" : "process.env.RECAPTCHA_PUBLIC_KEY_FILE||reCaptcha_pub.dummy",
-	"reCaptchaPrivateKeyFile" : "process.env.RECAPTCHA_PRIVATE_KEY_FILE||reCaptcha_priv.dummy"
+	"reCaptchaPrivateKeyFile" : "process.env.RECAPTCHA_PRIVATE_KEY_FILE||reCaptcha_priv.dummy",
+        "quotaApp" : null
     },
     "components": [
         {
