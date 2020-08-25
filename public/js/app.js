@@ -20,6 +20,8 @@ var initOptions = function() {
                                  false);
     options.newAccount = (options.newAccount === 'true' ? true : false);
 
+    options.resetAccount = (options.resetAccount === 'true' ? true : false);
+
     if (!isNaN(parseInt(options.durationInSec))) {
         options.durationInSec = parseInt(options.durationInSec);
     }
@@ -37,6 +39,7 @@ var initOptions = function() {
 
 exports.main = async function() {
     var ctx =  {
+        //store: redux.createStore(AppReducer)
         store: redux.createStore(AppReducer,
                                  window.__REDUX_DEVTOOLS_EXTENSION__ &&
                                  window.__REDUX_DEVTOOLS_EXTENSION__())

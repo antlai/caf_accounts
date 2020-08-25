@@ -1,12 +1,14 @@
-var React = require('react');
-var rB = require('react-bootstrap');
-var AppActions = require('../actions/AppActions');
-var AppStatus = require('./AppStatus');
-var NewAccount = require('./NewAccount');
-var NewError = require('./NewError');
-var TableToken = require('./TableToken');
-var TokenCreate = require('./TokenCreate');
-var cE = React.createElement;
+const React = require('react');
+const rB = require('react-bootstrap');
+const AppActions = require('../actions/AppActions');
+const AppStatus = require('./AppStatus');
+const NewAccount = require('./NewAccount');
+const MissingUser = require('./MissingUser');
+const Reset = require('./Reset');
+const NewError = require('./NewError');
+const TableToken = require('./TableToken');
+const TokenCreate = require('./TokenCreate');
+const cE = React.createElement;
 
 class MyApp extends React.Component {
     constructor(props) {
@@ -41,11 +43,30 @@ class MyApp extends React.Component {
                       ctx: this.props.ctx,
                       error: this.state.error
                   }),
+                  cE(MissingUser, {
+                      ctx: this.props.ctx,
+                      caOwner: this.state.caOwner,
+                      email: this.state.email,
+                      username: this.state.username
+                  }),
                   cE(NewAccount, {
                       ctx: this.props.ctx,
                       newAccount: this.state.newAccount,
                       caOwner: this.state.caOwner,
-                      siteKey: this.state.siteKey
+                      siteKey: this.state.siteKey,
+                      emailCode: this.state.emailCode,
+                      email: this.state.email,
+                      isRegistered: this.state.isRegistered,
+                      codeRequested: this.state.codeRequested
+                  }),
+                  cE(Reset, {
+                      ctx: this.props.ctx,
+                      resetAccount: this.state.resetAccount,
+                      caOwner: this.state.caOwner,
+                      siteKey: this.state.siteKey,
+                      resetCode: this.state.resetCode,
+                      email: this.state.email,
+                      resetCodeRequested: this.state.resetCodeRequested
                   }),
                   cE(rB.Panel, null,
                     cE(rB.Panel.Heading, null,

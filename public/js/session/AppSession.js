@@ -1,17 +1,19 @@
-var cli = require('caf_cli');
-var urlParser = require('url');
-var AppActions = require('../actions/AppActions');
+const cli = require('caf_cli');
+const json_rpc = require('caf_transport').json_rpc;
+const urlParser = require('url');
+const AppActions = require('../actions/AppActions');
 
-var stripURL = function()  {
-    var url = urlParser.parse(window.location.href);
+const stripURL = function()  {
+    const url = urlParser.parse(window.location.href);
     delete url.hash;
     return urlParser.format(url);
 };
 
 exports.connect = function(ctx, options) {
     return new Promise((resolve, reject) => {
-        var nobodyCA = 'NOBODY-' + options.caOwner.substring(0, 2);
-        var session = new cli.Session(stripURL(), nobodyCA, {
+        const nobodyCA = 'NOBODY-' +
+              options.caOwner.substring(0, json_rpc.ACCOUNTS_CA_LENGTH);
+        const session = new cli.Session(stripURL(), nobodyCA, {
             disableBackchannel: true,
             from: nobodyCA
         });

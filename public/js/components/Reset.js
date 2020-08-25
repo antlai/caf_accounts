@@ -1,74 +1,52 @@
-const React = require('react');
-const rB = require('react-bootstrap');
-const cE = React.createElement;
-const AppActions = require('../actions/AppActions');
-const reCap = require('react-google-recaptcha');
-const ReCAPTCHA = reCap.default;
-const srpClient = require('caf_srp').client;
-const url = require('url');
-const querystring = require('querystring');
+var React = require('react');
+var rB = require('react-bootstrap');
+var cE = React.createElement;
+var AppActions = require('../actions/AppActions');
+var reCap = require('react-google-recaptcha');
+var ReCAPTCHA = reCap.default;
+var srpClient = require('caf_srp').client;
 
 
-class  NewAccount extends React.Component {
+class Reset extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {password1: '', password2: '', reCaptcha: null,
-                      checkedUser: false};
+        this.state = {password1: '', password2: '', reCaptcha: null};
         this.doDismiss = this.doDismiss.bind(this);
-        this.doRetry = this.doRetry.bind(this);
         this.handlePasswordChange1 = this.handlePasswordChange1.bind(this);
         this.handlePasswordChange2 = this.handlePasswordChange2.bind(this);
         this.passwordKeyDown = this.passwordKeyDown.bind(this);
-        this.doSignUp = this.doSignUp.bind(this);
+        this.doReset = this.doReset.bind(this);
         this.handleReCaptcha = this.handleReCaptcha.bind(this);
         this.doRequestCode = this.doRequestCode.bind(this);
         this.handleEmail = this.handleEmail.bind(this);
-        this.handleEmailCode = this.handleEmailCode.bind(this);
-    }
-
-    componentDidUpdate() {
-        if (!this.state.checkedUser && this.props.caOwner) {
-            // caOwner is readonly, i.e., only set once...
-            AppActions.isRegistered(this.props.ctx, this.props.caOwner);
-            this.setState({checkedUser: true});
-        }
+        this.handleResetCode = this.handleResetCode.bind(this);
     }
 
     doRequestCode(ev) {
         if (this.props.caOwner && this.state.reCaptcha && this.props.email) {
-            AppActions.newAccount(this.props.ctx, this.props.caOwner,
-                                  this.state.reCaptcha, this.props.email);
-            AppActions.setLocalState(this.props.ctx, {codeRequested: true});
+            AppActions.newResetChallenge(this.props.ctx, this.props.caOwner,
+                                        this.state.reCaptcha, this.props.email);
+            AppActions.setLocalState(this.props.ctx,
+                                     {resetCodeRequested: true});
         } else {
             AppActions.setError(this.props.ctx, new Error('Invalid data'));
         }
     }
 
-    doRetry(ev) {
-        const parsedURL = url.parse(window.location.href);
-        const options = querystring.parse(parsedURL.hash.slice(1));
-        const parsedGoTo = url.parse(options.goTo);
-        parsedGoTo.protocol = (parsedGoTo.protocol === 'ws:' ?
-                               'http:': parsedGoTo.protocol);
-        parsedGoTo.protocol = (parsedGoTo.protocol === 'wss:' ?
-                               'https:': parsedGoTo.protocol);
-        window.location.href = url.format(parsedGoTo);
-    }
-
-    doSignUp(ev) {
+    doReset(ev) {
         const {password1, password2} = this.state;
 
-        if (this.props.caOwner && this.props.emailCode) {
+        if (this.props.caOwner && this.props.resetCode) {
             if (password1 && (password1 === password2)) {
                 const account = srpClient
                     .clientInstance(this.props.caOwner, password1)
                     .newAccount();
-                AppActions.activateAccount(this.props.ctx, account,
-                                           this.props.emailCode);
+                AppActions.resetAccount(this.props.ctx, account,
+                                           this.props.resetCode);
                 AppActions.setLocalState(this.props.ctx, {
                     password: password1,
-                    newAccount: false
+                    resetAccount: false
                 });
             } else {
                 AppActions.setError(this.props.ctx,
@@ -84,10 +62,10 @@ class  NewAccount extends React.Component {
         AppActions.setLocalState(this.props.ctx, {email: ev.target.value});
     }
 
-    handleEmailCode(ev) {
+    handleResetCode(ev) {
         const code = ev.target.value || '';
         AppActions.setLocalState(this.props.ctx,
-                                 {emailCode: code.toUpperCase()});
+                                 {resetCode: code.toUpperCase()});
     }
 
     handleReCaptcha(value) {
@@ -110,30 +88,30 @@ class  NewAccount extends React.Component {
 
     passwordKeyDown(ev) {
         if (ev.key === 'Enter') {
-            this.doSignUp(ev);
+            this.doReset(ev);
         }
     }
 
     doDismiss(ev) {
         AppActions.setLocalState(this.props.ctx, {
-           newAccount: false
+           resetAccount: false
         });
     }
 
     render() {
-        return cE(rB.Modal,{show: this.props.newAccount,
+        return cE(rB.Modal,{show: this.props.resetAccount,
                             onHide: this.doDismiss,
                             animation: false},
                   cE(rB.Modal.Header, {
-                      className : "bg-primary text-primary",
+                      className : 'bg-primary text-primary',
                       closeButton: true},
-                     cE(rB.Modal.Title, null, "Create Account")
+                     cE(rB.Modal.Title, null, 'Reset Account')
                     ),
                   cE(rB.ModalBody, null,
                      [
                          cE(rB.FormGroup, {
                              key: 1111,
-                             controlId: 'usernameNewId'
+                             controlId: 'reset-usernameNewId'
                          },
                             cE(rB.ControlLabel, null, 'Username'),
                             cE(rB.FormControl, {
@@ -142,12 +120,9 @@ class  NewAccount extends React.Component {
                                 value: this.props.caOwner
                             })
                            ),
-                         this.props.isRegistered &&
-                             cE(rB.Alert, {bsStyle: 'danger', key: 65},
-                                'Username already in use'),
-                         !this.props.isRegistered && cE(rB.FormGroup, {
+                         cE(rB.FormGroup, {
                              key: 1112,
-                             controlId: 'emailId'
+                             controlId: 'reset-emailId'
                          },
                             cE(rB.ControlLabel, null, 'Email'),
                             cE(rB.FormControl, {
@@ -156,22 +131,22 @@ class  NewAccount extends React.Component {
                                 value: this.props.email
                             })
                            ),
-                         this.props.codeRequested &&
+                         this.props.resetCodeRequested &&
                              cE(rB.FormGroup, {
                                  key: 2118,
-                                 controlId: 'emailCode'
+                                 controlId: 'reset-resetCode'
                              },
                                 cE(rB.ControlLabel, null, 'Confirm Code'),
                                 cE(rB.FormControl, {
                                     type: 'text',
-                                    onChange: this.handleEmailCode,
-                                    value: this.props.emailCode
+                                    onChange: this.handleResetCode,
+                                    value: this.props.resetCode
                                 })
                                ),
-                         this.props.codeRequested &&
+                         this.props.resetCodeRequested &&
                              cE(rB.FormGroup, {
                                  key: 1113,
-                                 controlId: 'password1Id'
+                                 controlId: 'reset-password1Id'
                              },
                                 cE(rB.ControlLabel, null, 'Password'),
                                 cE(rB.FormControl, {
@@ -180,10 +155,10 @@ class  NewAccount extends React.Component {
                                     value: this.state.password1
                                 })
                                ),
-                         this.props.codeRequested &&
+                         this.props.resetCodeRequested &&
                              cE(rB.FormGroup, {
                                  key: 1114,
-                                 controlId: 'password2Id'
+                                 controlId: 'reset-password2Id'
                              },
                                 cE(rB.ControlLabel, null, 'Repeat Password'),
                                 cE(rB.FormControl, {
@@ -193,8 +168,7 @@ class  NewAccount extends React.Component {
                                     onKeyPress: this.passwordKeyDown
                                 })
                                ),
-                         !this.props.isRegistered &&
-                             !this.props.codeRequested &&
+                         !this.props.resetCodeRequested &&
                              cE(ReCAPTCHA, {
                                  key: 1115,
                                  sitekey: this.props.siteKey,
@@ -203,24 +177,16 @@ class  NewAccount extends React.Component {
                      ].filter((x) => !!x)
                     ),
                   cE(rB.Modal.Footer, null,
-                     (this.props.isRegistered ?
-                      cE(rB.Button, {onClick: this.doRetry, bsStyle:'danger'},
-                         'Back to Login') :
-                      [
-                          cE(rB.Button, {key: 232, onClick: this.doDismiss},
-                             'Cancel'),
-                          (this.props.codeRequested ?
-                           cE(rB.Button, {key: 342, onClick: this.doSignUp,
-                                          bsStyle:'primary'},
-                              'Sign up') :
-                           cE(rB.Button, {key: 987, onClick: this.doRequestCode,
-                                          bsStyle:'primary'}, 'Request Code')
-                          )
-                      ]
+                     cE(rB.Button, {onClick: this.doDismiss}, 'Cancel'),
+                     (this.props.resetCodeRequested ?
+                      cE(rB.Button, {onClick: this.doReset, bsStyle:'primary'},
+                         'Save') :
+                      cE(rB.Button, {onClick: this.doRequestCode,
+                                     bsStyle:'primary'}, 'Request Code')
                      )
                     )
                  );
     }
 };
 
-module.exports = NewAccount;
+module.exports = Reset;

@@ -3,7 +3,15 @@
     "env" : {
 	"keysDir": "process.env.KEYS_DIR||null",
 	"publicKeyFile" : "process.env.PUBLIC_KEY_FILE||rsa_pub.pem.dummy",
-	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy"
+	"privateKeyFile" : "process.env.PRIVATE_KEY_FILE||rsa_priv.pem.dummy",
+        "disableTestAccounts" : "process.env.DISABLE_TEST_ACCOUNTS||true",
+        "enableSMTP" : "process.env.ENABLE_SMTP||false",
+        "templatesDir" : "process.env.TEMPLATES_DIR||null",
+        "resetTemplateFile" : "process.env.RESET_TEMPLATE_FILE||reset.html.mustache",
+        "challengeTimeoutInSec": "process.env.CHALLENGE_TIMEOUT_IN_SEC||1200",
+        "loginTimeoutInSec": "process.env.LOGIN_TIMEOUT_IN_SEC||120",
+        "maxLoginErrors": "process.env.MAX_LOGIN_ERRORS||5",
+        "confirmTemplateFile" : "process.env.CONFIRM_TEMPLATE_FILE||confirm.html.mustache"
     },
     "components" : [
         {
@@ -28,6 +36,24 @@
             ]
         },
         {
+            "module": "caf_smtp#plug_ca",
+            "name": "smtp",
+            "description": "Manages an SMTP service for a CA",
+            "env" : {
+                "maxRetries" : "$._.env.maxRetries",
+                "retryDelay" : "$._.env.retryDelay"
+            },
+            "components" : [
+                {
+                    "module": "caf_smtp#proxy",
+                    "name": "proxy",
+                    "description": "Allows access to an SMTP service",
+                    "env" : {
+                    }
+                }
+            ]
+        },
+        {
             "name": "handler",
             "components" : [
                 {
@@ -37,6 +63,11 @@
 			"privateKeyFile": "$._.env.privateKeyFile",
 			"publicKeyFile" :  "$._.env.publicKeyFile",
                         "stateVersion" : "$._.env.stateVersion",
+                        "disableTestAccounts": "$._.env.disableTestAccounts",
+                        "challengeTimeoutInSec" : "$._.env.challengeTimeoutInSec",
+                        "loginTimeoutInSec" : "$._.env.loginTimeoutInSec",
+                        "maxLoginErrors" : "$._.env.maxLoginErrors",
+                        "enableSMTP" : "$._.env.enableSMTP",
                         "testAccounts" : [
                             {
                                 "username" : "foo",

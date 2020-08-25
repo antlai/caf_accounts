@@ -13,6 +13,7 @@ class TokenCreate extends React.Component {
         this.submit = this.submit.bind(this);
         this.doNewToken = this.doNewToken.bind(this);
         this.doSignUp = this.doSignUp.bind(this);
+        this.doReset = this.doReset.bind(this);
     }
 
     componentDidMount() {
@@ -43,6 +44,13 @@ class TokenCreate extends React.Component {
         ReactDOM.findDOMNode(this.refs.password).focus();
         AppActions.setLocalState(this.props.ctx, {
             newAccount: true
+        });
+    }
+
+    doReset(ev) {
+        AppActions.setLocalState(this.props.ctx, {
+            resetAccount: true,
+            resetCodeRequested: false
         });
     }
 
@@ -89,12 +97,12 @@ class TokenCreate extends React.Component {
                         cE(rB.Button, {onClick: this.doNewToken,
                                        bsStyle: 'primary'},
                            'Create Token')
-                       )/*,
+                       ),
                      cE(rB.Col, {xs:5, sm:2},
-                        cE(rB.Button, {onClick: this.doSignUp,
+                        cE(rB.Button, {onClick: this.doReset,
                                        bsStyle: 'primary'},
-                           'Sign up')
-                       )*/
+                           'Forgot password?')
+                       )
                     )
                  );
     }
