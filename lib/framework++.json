@@ -59,6 +59,11 @@
                         "name" : "reset",
                         "dir" : "process.env.TEMPLATE_DIR||null",
                         "fileName" : "process.env.RESET_FILE_NAME||reset.html.mustache"
+                    },
+                    {
+                        "name" : "purchase",
+                        "dir" : "process.env.TEMPLATE_DIR||null",
+                        "fileName" : "process.env.RESET_FILE_NAME||purchase.html.mustache"
                     }
                 ]
             }
