@@ -4,7 +4,7 @@ var AppReducer = function(state, action) {
     if (typeof state === 'undefined') {
         return  {siteKey: null, isClosed: false, password: '',
                  resetAccount: false, isRegistered: false,
-                 username: '',
+                 username: '', showTerms: false,
                  emailCode: '', email: '', codeRequested: '', resetCode: '',
                  resetCodeRequested: ''};
     } else {

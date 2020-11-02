@@ -8,6 +8,8 @@ const Reset = require('./Reset');
 const NewError = require('./NewError');
 const TableToken = require('./TableToken');
 const TokenCreate = require('./TokenCreate');
+const Terms = require('./Terms');
+
 const cE = React.createElement;
 
 class MyApp extends React.Component {
@@ -42,6 +44,10 @@ class MyApp extends React.Component {
                   cE(NewError, {
                       ctx: this.props.ctx,
                       error: this.state.error
+                  }),
+                  cE(Terms, {
+                      ctx: this.props.ctx,
+                      showTerms: this.state.showTerms
                   }),
                   cE(MissingUser, {
                       ctx: this.props.ctx,
