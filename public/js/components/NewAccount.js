@@ -225,7 +225,7 @@ class  NewAccount extends React.Component {
                                cE(rB.Button, {
                                    onClick: this.doShowTerms,
                                    bsStyle: 'link'},
-                                  'terms of service'
+                                  'terms of service and privacy policy'
                                  )
                               )
                            )
