@@ -14,7 +14,7 @@ class  NewAccount extends React.Component {
     constructor(props) {
         super(props);
         this.state = {password1: '', password2: '', reCaptcha: null,
-                      checkedUser: false};
+                      checkedUser: false, clickedTerms: false};
         this.doDismiss = this.doDismiss.bind(this);
         this.doRetry = this.doRetry.bind(this);
         this.handlePasswordChange1 = this.handlePasswordChange1.bind(this);
@@ -25,6 +25,8 @@ class  NewAccount extends React.Component {
         this.doRequestCode = this.doRequestCode.bind(this);
         this.handleEmail = this.handleEmail.bind(this);
         this.handleEmailCode = this.handleEmailCode.bind(this);
+        this.handleClickedTerms = this.handleClickedTerms.bind(this);
+        this.doShowTerms = this.doShowTerms.bind(this);
     }
 
     componentDidUpdate() {
@@ -56,10 +58,18 @@ class  NewAccount extends React.Component {
         window.location.href = url.format(parsedGoTo);
     }
 
+    doShowTerms(ev) {
+        AppActions.setLocalState(this.props.ctx, {showTerms: true});
+    }
+
     doSignUp(ev) {
         const {password1, password2} = this.state;
 
-        if (this.props.caOwner && this.props.emailCode) {
+        if (!this.state.clickedTerms) {
+            AppActions.setError(this.props.ctx, new Error(
+                'Please agree to the terms of service'
+            ));
+        } else if (this.props.caOwner && this.props.emailCode) {
             if (password1 && (password1 === password2)) {
                 const account = srpClient
                     .clientInstance(this.props.caOwner, password1)
@@ -78,6 +88,10 @@ class  NewAccount extends React.Component {
         } else {
             AppActions.setError(this.props.ctx, new Error('Missing code'));
         }
+    }
+
+    handleClickedTerms(ev) {
+        this.setState({clickedTerms: ev.target.checked});
     }
 
     handleEmail(ev) {
@@ -199,7 +213,22 @@ class  NewAccount extends React.Component {
                                  key: 1115,
                                  sitekey: this.props.siteKey,
                                  onChange: this.handleReCaptcha
-                             })
+                             }),
+                         cE(rB.FormGroup, {
+                             key : 31114,
+                             controlId: 'terms'
+                         },
+                            cE(rB.Checkbox, {
+                                checked: this.state.clickedTerms,
+                                onChange: this.handleClickedTerms
+                            }, 'I agree to the ',
+                               cE(rB.Button, {
+                                   onClick: this.doShowTerms,
+                                   bsStyle: 'link'},
+                                  'terms of service'
+                                 )
+                              )
+                           )
                      ].filter((x) => !!x)
                     ),
                   cE(rB.Modal.Footer, null,
