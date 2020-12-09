@@ -13,7 +13,9 @@
 	"reCaptchaPrivateKeyFile" : "process.env.RECAPTCHA_PRIVATE_KEY_FILE||reCaptcha_priv.dummy",
         "smtpDir" : "process.env.SMTP_DIR||null",
         "smtpFile": "process.env.SMTP_FILE||smtp.json",
-        "quotaApp" : null
+        "quotaApp" : null,
+        "appCDN" : "process.env.APP_CDN||https://rootcdn-1734e.kxcdn.com",
+        "appSubdirCDN" : "process.env.APP_SUBDIR_CDN||v0.0.1"
     },
     "components": [
         {
