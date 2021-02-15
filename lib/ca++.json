@@ -71,7 +71,7 @@
                         "testAccounts" : [
                             {
                                 "username" : "foo",
-                                "password" : "pleasechange"
+                                "password" : "bar"
                             }
                         ]
                     }
