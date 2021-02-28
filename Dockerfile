@@ -6,7 +6,7 @@
 # TO_RUN:         cafjs run --appImage gcr.io/cafjs-k8/root-accounts accounts
 
 
-FROM node:12
+FROM node:14
 
 EXPOSE 3000
 
